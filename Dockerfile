@@ -55,6 +55,9 @@ RUN php artisan ui bootstrap --auth
 RUN php artisan config:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
+
+RUN npm install && npm run dev
+
 #RUN php artisan migrate
 #ENV WEB_DOCUMENT_ROOT /public
 #USER root
