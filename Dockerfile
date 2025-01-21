@@ -21,7 +21,9 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
-    libpq-dev \
+    libpq-dev  \
+    nodejs \
+    npm \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pgsql pdo_pgsql pdo_mysql mbstring exif pcntl bcmath gd zip intl opcache
 
@@ -43,9 +45,17 @@ RUN composer install
 COPY ./html/.env /var/www/html/.env
 
 RUN chown -R www-data:www-data /var/www
+#RUN composer require laravel/breeze
+
+# Была ошибка curl error 28 while downloading https://repo.packagist.org/p2/laravel/ui.json: Connection timed out after 10006 milliseconds
+RUN composer self-update
+RUN composer require laravel/ui --dev
+RUN php artisan ui bootstrap --auth
+
 RUN php artisan config:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
+#RUN php artisan migrate
 #ENV WEB_DOCUMENT_ROOT /public
 #USER root
 ADD init.sh /
@@ -54,4 +64,3 @@ USER www-data
 CMD ["/init.sh"]
 #COPY ./html /var/www/html
 #EXPOSE 9000
-
