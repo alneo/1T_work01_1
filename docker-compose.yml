@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+    container_name: laravel-app
+    ports:
+      - "8080:81"
+    volumes:
+      - ./html:/var/www/html
+    restart: unless-stopped
+    tty: true
